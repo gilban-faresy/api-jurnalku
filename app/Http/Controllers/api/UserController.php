@@ -55,14 +55,23 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'password' => 'required'
+            'old_password' => 'required',
+            'password' => 'required|confirmed'
         ]);
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            return response()->json([
+                'message' => 'Old password is incorrect'
+            ], 400);
+        }
 
         $user->update([
-            'password' => bcrypt($request->password)
+            'password' => Hash::make($request->password)
         ]);
 
-        return response()->json($user);
+        return response()->json([
+            'message' => 'Password updated successfully'
+        ], 200);
     }
 
 
