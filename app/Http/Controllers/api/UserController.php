@@ -56,7 +56,7 @@ class UserController extends Controller
 
         $request->validate([
             'old_password' => 'required',
-            'password' => 'required|confirmed'
+            'password' => 'required|min:6'
         ]);
 
         if (!Hash::check($request->old_password, $user->password)) {
@@ -71,7 +71,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Password updated successfully'
-        ], 200);
+        ]);
     }
 
 
